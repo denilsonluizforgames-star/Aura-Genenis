@@ -24,6 +24,8 @@
     <PublishTrimmed>false</PublishTrimmed>
     <RunAOTCompilation>false</RunAOTCompilation>
     <AndroidPackageFormats>apk</AndroidPackageFormats>
+    <AndroidSupportedAbis>arm64-v8a</AndroidSupportedAbis>
+    <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
     <!-- minSdk 24 (Android 7.0): exigido pelo OnnxRuntime (ai.onnxruntime) -->
     <SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
   </PropertyGroup>

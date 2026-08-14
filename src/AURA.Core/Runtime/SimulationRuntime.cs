@@ -341,7 +341,6 @@ namespace AURA.Core.Runtime
             
             // Wait longer for process completion
             process.WaitForExit(5000); // Increased from 2s
-            process.EndOutputReadLine();
             
             // Return captured output or fallback to file
             if (output.Count >= tailLines)
