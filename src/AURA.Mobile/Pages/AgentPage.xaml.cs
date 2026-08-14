@@ -56,6 +56,7 @@ public partial class AgentPage : ContentPage
         registry.Register(new WriteFileTool(root));
         registry.Register(new EditFileTool(root));
         registry.Register(new ShellAgentTool(root, _shellExecutor));
+        registry.Register(new WebSearchTool());
 
         string systemPrompt =
             "Você é o agente de arquivos da AURA, um assistente que trabalha " +
@@ -65,6 +66,11 @@ public partial class AgentPage : ContentPage
             "workspace e executar comandos shell (sh -c) nesse diretório. " +
             "Prefira ferramentas a respostas vagas: quando o usuário pedir uma " +
             "tarefa, use as ferramentas e confirme o que foi feito. " +
+            "Quando a pergunta exigir informação atual, notícias, documentação " +
+            "externa ou algo fora do workspace, use a ferramenta web_search " +
+            "para pesquisar na internet aberta (sem login) e refazer a " +
+            "solicitação do usuário na web, retornando a resposta com base " +
+            "nos resultados obtidos. " +
             "Responda em português, de forma curta e objetiva. " +
             "Caminhos são sempre relativos ao workspace.";
 

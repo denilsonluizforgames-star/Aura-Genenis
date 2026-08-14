@@ -65,23 +65,34 @@ public partial class ChatPage : ContentPage
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(apiKey) && (_client.Options.BaseUrl.Contains("openrouter") ||
-            _client.Options.BaseUrl.Contains("groq") || _client.Options.BaseUrl.Contains("cerebras") ||
-            _client.Options.BaseUrl.Contains("generativelanguage")))
-        {
-            AnswerLabel.Text = "Configure a chave de API para este provedor.";
-            return;
-        }
+        bool hasUsableKey = !string.IsNullOrWhiteSpace(apiKey) &&
+            apiKey.Length <= 200 &&
+            apiKey.IndexOfAny(new[] { ' ', '\t', '\r', '\n' }) < 0;
 
         SendButton.IsEnabled = false;
         BusyIndicator.IsRunning = true;
         BusyIndicator.IsVisible = true;
-        AnswerLabel.Text = "Pensando...";
+        AnswerLabel.Text = hasUsableKey ? "Pensando..." : "Buscando na internet aberta...";
 
         try
         {
-            var assistant = new AiAssistant(_client, _memory);
-            string answer = await assistant.AskAsync(question);
+            string answer;
+
+            if (hasUsableKey)
+            {
+                var assistant = new AiAssistant(_client, _memory);
+                answer = await assistant.AskAsync(question);
+            }
+            else
+            {
+                // Sem chave de API: refaz a solicitação na internet aberta
+                // (sites de IA/busca que não exigem login) e retorna os resultados.
+                var web = new WebSearchTool();
+                answer = await web.ExecuteAsync(
+                    "{\"query\": " + System.Text.Json.JsonSerializer.Serialize(question) + "}");
+                answer = "Sem chave de IA configurada, busquei na internet aberta:\n\n" + answer;
+            }
+
             AnswerLabel.Text = answer;
             _voice?.SetLastUtterance(answer);
         }
