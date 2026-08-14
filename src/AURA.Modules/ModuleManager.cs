@@ -25,8 +25,9 @@ namespace AURA.Modules
         private readonly ConfigLoader _configLoader;
         private readonly HttpClient _http;
         private readonly EventBus _events;
+        private readonly Func<string, Task<string>> _localPackageProvider;
 
-        public ModuleManager(ILogger logger, string packagesDir, string modulesPath, EventBus events = null, HttpMessageHandler httpHandler = null, string pluginsRoot = null)
+        public ModuleManager(ILogger logger, string packagesDir, string modulesPath, EventBus events = null, HttpMessageHandler httpHandler = null, string pluginsRoot = null, Func<string, Task<string>> localPackageProvider = null)
         {
             _logger = logger;
             _packagesDir = packagesDir;
@@ -34,6 +35,7 @@ namespace AURA.Modules
             _pluginsRoot = pluginsRoot ?? Path.Combine(Path.GetTempPath(), "aura_plugins");
             _configLoader = new ConfigLoader(logger);
             _events = events;
+            _localPackageProvider = localPackageProvider;
             _http = httpHandler != null
                 ? new HttpClient(httpHandler) { Timeout = TimeSpan.FromSeconds(40) }
                 : new HttpClient { Timeout = TimeSpan.FromSeconds(40) };
@@ -50,8 +52,11 @@ namespace AURA.Modules
         }
 
         /// <summary>
-        /// Baixa o pacote JSON do módulo (manifesto) e valida o ID. Lança
-        /// exceção se a rede falhar ou o pacote for inválido.
+        /// Obtém o pacote JSON do módulo (manifesto) e valida o ID. Tenta primeiro
+        /// o download remoto; se ele falhar (sem rede, repositório privado que
+        /// devolve 404 no raw.githubusercontent.com, etc.) recorre ao pacote
+        /// embarcado no app, quando disponível. Lança exceção só se as duas
+        /// origens falharem ou o pacote for inválido.
         /// </summary>
         public async Task DownloadAsync(string id)
         {
@@ -71,13 +76,44 @@ namespace AURA.Modules
                 throw new InvalidOperationException("Módulo ainda não tem pacote para baixar: " + id);
             }
 
-            _logger.Info("Baixando módulo " + id + " de " + info.PackageUrl);
+            string json = null;
+            Exception remoteError = null;
 
-            string json;
-            using (var resp = await _http.GetAsync(info.PackageUrl))
+            _logger.Info("Baixando módulo " + id + " de " + info.PackageUrl);
+            try
             {
+                using var resp = await _http.GetAsync(info.PackageUrl);
                 resp.EnsureSuccessStatusCode();
                 json = await resp.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                remoteError = ex;
+                _logger.Warning("Download remoto falhou para " + id + ": " + ex.Message);
+            }
+
+            // Fallback: pacote embarcado no app (assets do APK no Android).
+            if (string.IsNullOrWhiteSpace(json) && _localPackageProvider != null)
+            {
+                try
+                {
+                    json = await _localPackageProvider(id);
+                    if (!string.IsNullOrWhiteSpace(json))
+                    {
+                        _logger.Info("Usando pacote embarcado do módulo " + id);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Warning("Pacote embarcado indisponível para " + id + ": " + ex.Message);
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                throw new InvalidOperationException(
+                    "Não foi possível obter o pacote do módulo " + id +
+                    " (remoto e embarcado indisponíveis).", remoteError);
             }
 
             using var doc = JsonDocument.Parse(json);
