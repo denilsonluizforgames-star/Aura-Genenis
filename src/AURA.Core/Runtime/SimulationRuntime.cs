@@ -323,33 +323,28 @@ namespace AURA.Core.Runtime
         public string ReadCellLog(string id, int tailLines = 50)
         {
             Cell cell = RequireCell(id);
-            var process = GetRunningProcess(cell);
-            
-            // Capture stdout/stderr in real-time
-            var output = new List<string>();
-            process.OutputDataReceived += (sender, args) => 
+
+            if (string.IsNullOrEmpty(cell.LogFile) || !File.Exists(cell.LogFile))
+                return "(sem log)";
+
+            try
             {
-                if (!string.IsNullOrEmpty(args.Data)) output.Add(args.Data);
-            };
-            process.ErrorDataReceived += (sender, args) => 
+                var lines = File.ReadLines(cell.LogFile).TakeLast(Math.Max(1, tailLines));
+                return string.Join("\n", lines);
+            }
+            catch (IOException)
             {
-                if (!string.IsNullOrEmpty(args.Data)) output.Add(args.Data);
-            };
-            process.Start();
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-            
-            // Wait longer for process completion
-            process.WaitForExit(5000); // Increased from 2s
-            
-            // Return captured output or fallback to file
-            if (output.Count >= tailLines)
-                return string.Join("\n", output.GetRange(output.Count - tailLines, tailLines));
-            
-            if (File.Exists(cell.LogFile))
-                return string.Join("\n", File.ReadLines(cell.LogFile).Take(tailLines));
-            
-            return "(sem log)";
+                try
+                {
+                    var all = File.ReadAllLines(cell.LogFile);
+                    int start = Math.Max(0, all.Length - Math.Max(1, tailLines));
+                    return string.Join("\n", all.Skip(start));
+                }
+                catch
+                {
+                    return "(log indisponível)";
+                }
+            }
         }
 
         /// <summary>
