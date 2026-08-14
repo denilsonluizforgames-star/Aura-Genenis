@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:memory="clr-namespace:AURA.Memory;assembly=AURA.Memory"
+             xmlns:local="clr-namespace:AURA.Mobile"
+             x:Class="AURA.Mobile.Pages.MemoryPage"
+             Title="Memória"
+             BackgroundColor="{DynamicResource AuraBackground}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- ── Header ────────────────────────────────── -->
+        <Border Grid.Row="0"
+                BackgroundColor="{DynamicResource AuraSurface}"
+                Stroke="{DynamicResource AuraBorder}"
+                StrokeThickness="1"
+                Padding="16,14"
+                StrokeShape="RoundRectangle 0,0,0,0">
+            <HorizontalStackLayout Spacing="8">
+                <Label Text="⬟"
+                       FontSize="16"
+                       TextColor="{DynamicResource AuraWarning}" />
+                <Label Text="MEMÓRIA PERSISTENTE"
+                       FontSize="11"
+                       FontAttributes="Bold"
+                       TextColor="{DynamicResource AuraWarning}" />
+            </HorizontalStackLayout>
+        </Border>
+
+        <!-- ── Lista de entradas ──────────────────────── -->
+        <CollectionView x:Name="EntriesView" Grid.Row="1" Margin="0,4">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="memory:MemoryEntry">
+                    <Border Margin="14,4"
+                            BackgroundColor="{DynamicResource AuraSurface}"
+                            Stroke="{DynamicResource AuraBorder}"
+                            StrokeThickness="1"
+                            Padding="14,10"
+                            StrokeShape="RoundRectangle 12,12,12,12">
+                        <Grid RowDefinitions="Auto,Auto" RowSpacing="5">
+
+                            <!-- Chip de role -->
+                            <HorizontalStackLayout Spacing="8">
+                                <Border Padding="6,2"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 6,6,6,6">
+                                    <Border.BackgroundColor>
+                                        <Binding Path="Role"
+                                                 Converter="{x:Static local:RoleToColorConverter.Instance}" />
+                                    </Border.BackgroundColor>
+                                    <Label Text="{Binding Role}"
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="White" />
+                                </Border>
+                                <Label Text="{Binding TimestampUtc, StringFormat='{0:HH:mm}'}"
+                                       FontSize="10"
+                                       TextColor="{DynamicResource AuraTextMuted}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <Label Grid.Row="1"
+                                   Text="{Binding Text}"
+                                   FontSize="13"
+                                   LineBreakMode="WordWrap"
+                                   TextColor="{DynamicResource AuraTextPrimary}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- ── Botões ─────────────────────────────────── -->
+        <Grid Grid.Row="2"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="12"
+              Padding="16,10">
+            <Button Text="↻  Atualizar"
+                    Clicked="OnRefreshClicked"
+                    Style="{StaticResource BtnGhost}" />
+            <Button Grid.Column="1"
+                    Text="⌫  Limpar"
+                    Clicked="OnClearClicked"
+                    Style="{StaticResource BtnDanger}" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

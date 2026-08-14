@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AURA.Mobile.Pages.RunPage"
+             Title="Rodar programa"
+             BackgroundColor="{DynamicResource AuraBackground}">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="10">
+
+        <Label Text="Rodar programa em célula isolada"
+               FontAttributes="Bold"
+               FontSize="18"
+               TextColor="{DynamicResource AuraTextPrimary}" />
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="10">
+
+                <Label Text="A AURA decide como rodar: escolha um arquivo (.py/.jar/.dll) e o launcher certo é resolvido pela extensão."
+                       FontSize="13"
+                       TextColor="{DynamicResource AuraTextSecondary}" />
+
+                <Button Text="Escolher arquivo"
+                        Clicked="OnPickClicked"
+                        BackgroundColor="{DynamicResource AuraSurface}"
+                        TextColor="{DynamicResource AuraTextPrimary}"
+                        CornerRadius="8" />
+                <Label x:Name="FileLabel"
+                       FontSize="12"
+                       FontFamily="monospace"
+                       LineBreakMode="TailTruncation"
+                       TextColor="{DynamicResource AuraTextSecondary}" />
+                <Label x:Name="LauncherLabel"
+                       FontSize="12"
+                       TextColor="{DynamicResource AuraAccent}" />
+
+                <BoxView HeightRequest="1" Color="{DynamicResource AuraSurface}" />
+
+                <Label Text="OU informe um executável direto (ex.: /system/bin/sh com args '-c' 'echo oi')"
+                       FontSize="13"
+                       TextColor="{DynamicResource AuraTextSecondary}" />
+                <Entry x:Name="ExeEntry"
+                       Placeholder="Executável (caminho direto, opcional)"
+                       FontFamily="monospace"
+                       TextColor="{DynamicResource AuraTextPrimary}"
+                       PlaceholderColor="{DynamicResource AuraTextSecondary}"
+                       BackgroundColor="{DynamicResource AuraSurface}" />
+
+                <BoxView HeightRequest="1" Color="{DynamicResource AuraSurface}" />
+
+                <Entry x:Name="CellIdEntry"
+                       Placeholder="ID da célula (vazio = automático)"
+                       TextColor="{DynamicResource AuraTextPrimary}"
+                       PlaceholderColor="{DynamicResource AuraTextSecondary}"
+                       BackgroundColor="{DynamicResource AuraSurface}" />
+                <Entry x:Name="ArgsEntry"
+                       Placeholder="Argumentos (opcional)"
+                       TextColor="{DynamicResource AuraTextPrimary}"
+                       PlaceholderColor="{DynamicResource AuraTextSecondary}"
+                       BackgroundColor="{DynamicResource AuraSurface}" />
+                <Entry x:Name="MemEntry"
+                       Placeholder="Limite de memória em MB (opcional)"
+                       Keyboard="Numeric"
+                       TextColor="{DynamicResource AuraTextPrimary}"
+                       PlaceholderColor="{DynamicResource AuraTextSecondary}"
+                       BackgroundColor="{DynamicResource AuraSurface}" />
+
+                <Button Text="Rodar em célula"
+                        Clicked="OnRunClicked"
+                        BackgroundColor="{DynamicResource AuraAccent}"
+                        TextColor="White"
+                        CornerRadius="8" />
+
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <Label x:Name="ResultLabel"
+                           FontSize="13"
+                           TextColor="{DynamicResource AuraTextPrimary}"
+                           VerticalOptions="Center" />
+                    <Button Grid.Column="1"
+                            x:Name="CopyButton"
+                            Text="Copiar"
+                            Clicked="OnCopyClicked"
+                            BackgroundColor="{DynamicResource AuraSurface}"
+                            TextColor="{DynamicResource AuraAccent}"
+                            Padding="12,4"
+                            CornerRadius="8"
+                            FontSize="12" />
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <ActivityIndicator x:Name="BusyIndicator"
+                           Grid.Row="2"
+                           IsRunning="False"
+                           IsVisible="False"
+                           Color="{DynamicResource AuraAccent}" />
+
+    </Grid>
+</ContentPage>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:runtime="clr-namespace:AURA.Core.Runtime;assembly=AURA.Core"
+             x:Class="AURA.Mobile.Pages.CellsPage"
+             Title="Células"
+             BackgroundColor="{DynamicResource AuraBackground}">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="10">
+
+        <Label Text="Células (processos isolados com reciclagem em crash)"
+               FontAttributes="Bold"
+               FontSize="18"
+               TextColor="{DynamicResource AuraTextPrimary}" />
+
+        <CollectionView x:Name="CellsView" Grid.Row="1">
+            <CollectionView.EmptyView>
+                <Label Text="Nenhuma célula ainda. Use 'Rodar programa' para criar uma."
+                       FontSize="14"
+                       TextColor="{DynamicResource AuraTextSecondary}" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="runtime:Cell">
+                    <Frame BackgroundColor="{DynamicResource AuraSurface}"
+                           BorderColor="Transparent"
+                           CornerRadius="12"
+                           Padding="12"
+                           Margin="0,4">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="{Binding Id}"
+                                   FontAttributes="Bold"
+                                   FontSize="15"
+                                   TextColor="{DynamicResource AuraTextPrimary}" />
+                            <Label FontSize="12" TextColor="{DynamicResource AuraTextSecondary}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Estado: " TextColor="{DynamicResource AuraTextSecondary}" />
+                                        <Span Text="{Binding State}" TextColor="{DynamicResource AuraAccent}" />
+                                        <Span Text="{Binding ProcessId, StringFormat='   pid: {0}'}" TextColor="{DynamicResource AuraTextSecondary}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Text="{Binding AppPath}"
+                                   FontSize="11"
+                                   LineBreakMode="TailTruncation"
+                                   FontFamily="monospace"
+                                   TextColor="{DynamicResource AuraTextSecondary}" />
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                                <Button Text="Iniciar"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnStartClicked"
+                                        BackgroundColor="{DynamicResource AuraAccent}"
+                                        TextColor="White"
+                                        FontSize="13"
+                                        Padding="6,4"
+                                        CornerRadius="8" />
+                                <Button Grid.Column="1"
+                                        Text="Parar"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnStopClicked"
+                                        BackgroundColor="{DynamicResource AuraSurface}"
+                                        TextColor="{DynamicResource AuraTextPrimary}"
+                                        FontSize="13"
+                                        Padding="6,4"
+                                        CornerRadius="8" />
+                                <Button Grid.Column="2"
+                                        Text="Pausa"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnPauseClicked"
+                                        BackgroundColor="{DynamicResource AuraSurface}"
+                                        TextColor="{DynamicResource AuraTextPrimary}"
+                                        FontSize="13"
+                                        Padding="6,4"
+                                        CornerRadius="8" />
+                            </Grid>
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                                <Button Text="Retomar"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnResumeClicked"
+                                        BackgroundColor="{DynamicResource AuraSurface}"
+                                        TextColor="{DynamicResource AuraTextPrimary}"
+                                        FontSize="13"
+                                        Padding="6,4"
+                                        CornerRadius="8" />
+                                <Button Grid.Column="1"
+                                        Text="Log"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnLogClicked"
+                                        BackgroundColor="{DynamicResource AuraSurface}"
+                                        TextColor="{DynamicResource AuraTextPrimary}"
+                                        FontSize="13"
+                                        Padding="6,4"
+                                        CornerRadius="8" />
+                                <Button Grid.Column="2"
+                                        Text="Excluir"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnDeleteClicked"
+                                        BackgroundColor="{DynamicResource AuraError}"
+                                        TextColor="White"
+                                        FontSize="13"
+                                        Padding="6,4"
+                                        CornerRadius="8" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="10">
+            <Button Text="Atualizar"
+                    Clicked="OnRefreshClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    CornerRadius="8" />
+            <Button Grid.Column="1"
+                    Text="Nova célula"
+                    Clicked="OnNewClicked"
+                    BackgroundColor="{DynamicResource AuraAccent}"
+                    TextColor="White"
+                    CornerRadius="8" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

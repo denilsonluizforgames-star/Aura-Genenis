@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>AURA.Mobile</RootNamespace>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <ApplicationId>com.aura.genesis</ApplicationId>
+    <ApplicationTitle>AURA</ApplicationTitle>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>2.1</ApplicationDisplayVersion>
+
+    <!--
+      Sideload (sem restrições de loja): linker em modo mínimo para não quebrar
+      a descoberta dinâmica de módulos via Reflection (Assembly.LoadFrom +
+      Activator.CreateInstance) nem o Process.Start dos executores.
+      Full trimming/AOT agressivo pode remover tipos usados só em runtime.
+    -->
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <PublishTrimmed>false</PublishTrimmed>
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <AndroidPackageFormats>apk</AndroidPackageFormats>
+    <!-- minSdk 24 (Android 7.0): exigido pelo OnnxRuntime (ai.onnxruntime) -->
+    <SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <!-- ONNX Runtime: TFM net9.0-android (consumido pelo net10.0-android do app).
+         Traz a runtime nativa (.so) do Android para inferência CPU local do Kokoro TTS. -->
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.28.0" />
+  </ItemGroup>
+
+  <!-- Modelo Kokoro TTS + voz pf_dora (pt-br) + vocab. Assets empacotados no APK. -->
+  <ItemGroup>
+    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- Referencia o Core/Abstractions/Agents/Memória/AI/rede/diagnóstico do repo GitHub. -->
+  <ItemGroup>
+    <ProjectReference Include="..\AURA.Abstractions\AURA.Abstractions.csproj" />
+    <ProjectReference Include="..\AURA.Core\AURA.Core.csproj" />
+    <ProjectReference Include="..\AURA.Modules\AURA.Modules.csproj" />
+    <ProjectReference Include="..\AURA.Agents\AURA.Agents.csproj" />
+    <ProjectReference Include="..\AURA.Memory\AURA.Memory.csproj" />
+    <ProjectReference Include="..\AURA.AI\AURA.AI.csproj" />
+    <ProjectReference Include="..\AURA.Network\AURA.Network.csproj" />
+    <ProjectReference Include="..\AURA.SystemInfo\AURA.SystemInfo.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#101014" />
+    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#101014" BaseSize="128,128" />
+  </ItemGroup>
+
+</Project>

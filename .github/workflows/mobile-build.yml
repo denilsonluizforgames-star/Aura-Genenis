@@ -1,0 +1,87 @@
+name: Build AURA Mobile APK
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+  DOTNET_NOLOGO: '1'
+  DOTNET_GCHeapHardLimit: '1C0000000'
+  DOTNET_GCHeapCount: '2'
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Setup JDK 17 (Android)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install MAUI Android workload
+        run: dotnet workload install maui-android
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-mobile-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-mobile-${{ runner.os }}-
+
+      - name: Restore
+        run: dotnet restore src/AURA.Mobile/AURA.Mobile.csproj
+
+      - name: Setup keystore de assinatura (secret)
+        run: |
+          if [ -n "${{ secrets.AURA_KEYSTORE_B64 }}" ]; then
+            mkdir -p keystore
+            echo "${{ secrets.AURA_KEYSTORE_B64 }}" | base64 -d > keystore/aura-release.jks
+            echo "KEYSTORE_PRESENT=1" >> "$GITHUB_ENV"
+            echo "Keystore restaurada do secret."
+          else
+            echo "::warning::Secret AURA_KEYSTORE_B64 ausente; APK será assinado com keystore de debug."
+          fi
+
+      - name: Build APK (Release)
+        run: |
+          SIGN_ARGS=""
+          if [ "$KEYSTORE_PRESENT" = "1" ]; then
+            SIGN_ARGS="-p:AndroidSigningKeyStore=keystore/aura-release.jks \
+              -p:AndroidSigningKeyAlias=${{ secrets.AURA_KEYSTORE_ALIAS }} \
+              -p:AndroidSigningKeyPass=${{ secrets.AURA_KEYSTORE_PASS }} \
+              -p:AndroidSigningStorePass=${{ secrets.AURA_KEYSTORE_PASS }} \
+              -p:AndroidUseDebugSigning=false"
+          fi
+          dotnet build src/AURA.Mobile/AURA.Mobile.csproj \
+            -c Release --no-restore \
+            -p:AndroidPackageFormats=apk \
+            $SIGN_ARGS
+
+      - name: Upload APK release (assinado)
+        if: env.KEYSTORE_PRESENT == '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-mobile-apk-release
+          path: src/AURA.Mobile/bin/Release/net10.0-android/*-Signed.apk
+          if-no-files-found: warn
+
+      - name: Upload APK debug
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-mobile-apk-debug
+          path: src/AURA.Mobile/bin/Release/net10.0-android/*.apk
+          if-no-files-found: error

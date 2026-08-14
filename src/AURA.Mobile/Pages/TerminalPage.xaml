@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AURA.Mobile.Pages.TerminalPage"
+             Title="Terminal"
+             BackgroundColor="{DynamicResource AuraBackground}">
+
+    <Grid RowDefinitions="*,Auto,Auto" Padding="12" RowSpacing="8">
+
+        <ScrollView x:Name="OutputScroll" Grid.Row="0">
+            <VerticalStackLayout x:Name="OutputStack" Spacing="6" Padding="2" />
+        </ScrollView>
+
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,*,Auto,Auto" ColumnSpacing="8">
+            <Button x:Name="UpButton"
+                    Text="↑"
+                    Clicked="OnHistoryUpClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    Padding="12,4"
+                    CornerRadius="6"
+                    FontSize="14" />
+            <Button Grid.Column="1"
+                    Text="↓"
+                    Clicked="OnHistoryDownClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    Padding="12,4"
+                    CornerRadius="6"
+                    FontSize="14" />
+            <Label Grid.Column="2"
+                   x:Name="DirLabel"
+                   FontSize="11"
+                   FontFamily="monospace"
+                   LineBreakMode="TailTruncation"
+                   VerticalOptions="Center"
+                   TextColor="{DynamicResource AuraTextSecondary}" />
+            <Button Grid.Column="3"
+                    Text="Copiar"
+                    Clicked="OnCopyClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    Padding="12,4"
+                    CornerRadius="6"
+                    FontSize="13" />
+            <Button Grid.Column="4"
+                    Text="Limpar"
+                    Clicked="OnClearClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    Padding="12,4"
+                    CornerRadius="6"
+                    FontSize="13" />
+        </Grid>
+
+        <Grid Grid.Row="2" ColumnDefinitions="Auto,*" ColumnSpacing="8">
+            <Label x:Name="PromptLabel"
+                   Text="$"
+                   FontFamily="monospace"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"
+                   TextColor="{DynamicResource AuraSuccess}" />
+            <Entry x:Name="CommandEntry"
+                   Grid.Column="1"
+                   Placeholder="comando (ex.: ls, uname -a, echo oi)"
+                   FontFamily="monospace"
+                   TextColor="{DynamicResource AuraTextPrimary}"
+                   PlaceholderColor="{DynamicResource AuraTextSecondary}"
+                   BackgroundColor="{DynamicResource AuraSurface}"
+                   Completed="OnCommandCompleted"
+                   ReturnType="Go" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:diagnostics="clr-namespace:AURA.Mobile.Diagnostics"
+             x:Class="AURA.Mobile.Pages.FixesPage"
+             Title="Correções"
+             BackgroundColor="{DynamicResource AuraBackground}">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="20" RowSpacing="10">
+
+        <Label Text="Correções diretas (sem recompilar)"
+               FontAttributes="Bold"
+               FontSize="18"
+               TextColor="{DynamicResource AuraTextPrimary}" />
+
+        <Label Grid.Row="1"
+               Text="A IA analisa o log e a configuração atual e propõe correções aplicáveis agora. Marque as que deseja e toque em Aplicar."
+               FontSize="13"
+               TextColor="{DynamicResource AuraTextSecondary}" />
+
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout x:Name="ContentStack" Spacing="10">
+                <Label x:Name="StatusLabel"
+                       Text="Toque em Analisar para obter sugestões."
+                       FontSize="14"
+                       TextColor="{DynamicResource AuraTextPrimary}" />
+                <CollectionView x:Name="FixesView">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="diagnostics:FixProposal">
+                            <Frame BackgroundColor="{DynamicResource AuraSurface}"
+                                   BorderColor="Transparent"
+                                   CornerRadius="12"
+                                   Padding="12"
+                                   Margin="0,4">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="{Binding Label}"
+                                           FontAttributes="Bold"
+                                           FontSize="14"
+                                           TextColor="{DynamicResource AuraTextPrimary}" />
+                                    <Label Text="{Binding Reason}"
+                                           FontSize="12"
+                                           TextColor="{DynamicResource AuraTextSecondary}" />
+                                    <Label FontSize="12"
+                                           TextColor="{DynamicResource AuraAccent}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Current}" TextColor="{DynamicResource AuraTextSecondary}" />
+                                                <Span Text="  →  " TextColor="{DynamicResource AuraAccent}" />
+                                                <Span Text="{Binding Suggested}" TextColor="{DynamicResource AuraAccent}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <CheckBox IsChecked="{Binding Selected}"
+                                              Color="{DynamicResource AuraAccent}" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="3" Spacing="8">
+            <ActivityIndicator x:Name="BusyIndicator"
+                               IsRunning="False"
+                               IsVisible="False"
+                               Color="{DynamicResource AuraAccent}" />
+            <Button x:Name="AnalyzeButton"
+                    Text="Analisar e propor correções"
+                    Clicked="OnAnalyzeClicked"
+                    BackgroundColor="{DynamicResource AuraAccent}"
+                    TextColor="White"
+                    CornerRadius="8" />
+            <Button x:Name="ApplyButton"
+                    Text="Aplicar selecionadas"
+                    Clicked="OnApplyClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    CornerRadius="8" />
+            <Button x:Name="ResetButton"
+                    Text="Restaurar padrão"
+                    Clicked="OnResetClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    CornerRadius="8" />
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

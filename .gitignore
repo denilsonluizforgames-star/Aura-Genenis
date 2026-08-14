@@ -1,0 +1,53 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Maui specific
+bin/
+obj/
+*.apk
+*.aab
+*.apks
+
+# Packages
+**/[Pp]ackages/*
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+
+# NuGet v3's project.json files produces more ignorable files
+*.nuget.props
+*.nuget.targets
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Local development files
+*.userprefs
+*.csproj.user
+*.bak
+*.swp
+
+# Artifacts
+artifacts/
+coverage*
+**/coverage*/
+
+# Release files
+*.nupkg
+*.snupkg
+*.symbols.nupkg
+
+# Temporary files
+*.tmp
+*.temp
+*.log

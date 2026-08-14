@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AURA.Mobile.App">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!-- ── Paleta de cores ─────────────────────────────────── -->
+            <Color x:Key="AuraBackground">#0c0c12</Color>
+            <Color x:Key="AuraSurface">#13131d</Color>
+            <Color x:Key="AuraSurface2">#1c1c2a</Color>
+            <Color x:Key="AuraAccent">#4f8aff</Color>
+            <Color x:Key="AuraAccentDim">#1a2a4a</Color>
+            <Color x:Key="AuraAccentGlow">#0d1f3c</Color>
+            <Color x:Key="AuraCyan">#38d9c0</Color>
+            <Color x:Key="AuraCyanDim">#0d2e2a</Color>
+            <Color x:Key="AuraTextPrimary">#e8e8f0</Color>
+            <Color x:Key="AuraTextSecondary">#7a7a90</Color>
+            <Color x:Key="AuraTextMuted">#45455a</Color>
+            <Color x:Key="AuraSuccess">#3ec97a</Color>
+            <Color x:Key="AuraError">#e05560</Color>
+            <Color x:Key="AuraWarning">#f0a050</Color>
+            <Color x:Key="AuraBorder">#242438</Color>
+            <Color x:Key="AuraBorderAccent">#2a3a6a</Color>
+            <Color x:Key="AuraUserBubble">#1e2d54</Color>
+            <Color x:Key="AuraAgentBubble">#13131d</Color>
+            <Color x:Key="AuraToolBubble">#0f1420</Color>
+
+            <!-- ── Estilos globais ─────────────────────────────────── -->
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource AuraTextPrimary}" />
+                <Setter Property="FontFamily" Value="OpenSans" />
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="TextColor" Value="{StaticResource AuraTextPrimary}" />
+                <Setter Property="PlaceholderColor" Value="{StaticResource AuraTextMuted}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource AuraSurface2}" />
+            </Style>
+
+            <Style TargetType="Editor">
+                <Setter Property="TextColor" Value="{StaticResource AuraTextPrimary}" />
+                <Setter Property="PlaceholderColor" Value="{StaticResource AuraTextMuted}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource AuraSurface2}" />
+            </Style>
+
+            <Style TargetType="Picker">
+                <Setter Property="TextColor" Value="{StaticResource AuraTextPrimary}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource AuraSurface2}" />
+                <Setter Property="TitleColor" Value="{StaticResource AuraTextMuted}" />
+            </Style>
+
+            <!-- Botão primário (accent) -->
+            <Style x:Key="BtnPrimary" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource AuraAccent}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Padding" Value="16,10" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <!-- Botão fantasma (ghost) -->
+            <Style x:Key="BtnGhost" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource AuraSurface2}" />
+                <Setter Property="TextColor" Value="{StaticResource AuraAccent}" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="14,8" />
+                <Setter Property="FontSize" Value="13" />
+            </Style>
+
+            <!-- Botão destrutivo -->
+            <Style x:Key="BtnDanger" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource AuraError}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="14,8" />
+                <Setter Property="FontSize" Value="13" />
+            </Style>
+
+            <!-- Card padrão -->
+            <Style x:Key="AuraCard" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource AuraSurface}" />
+                <Setter Property="Stroke" Value="{StaticResource AuraBorder}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Padding" Value="16,14" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="14" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Card com borda accent lateral -->
+            <Style x:Key="AuraCardAccent" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{StaticResource AuraSurface}" />
+                <Setter Property="Stroke" Value="{StaticResource AuraBorderAccent}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="Padding" Value="16,14" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="14" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

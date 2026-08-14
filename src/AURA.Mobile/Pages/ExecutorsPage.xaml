@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:AURA.Mobile.Pages"
+             x:Class="AURA.Mobile.Pages.ExecutorsPage"
+             Title="Executores"
+             BackgroundColor="{DynamicResource AuraBackground}">
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto" Padding="20" RowSpacing="12">
+
+        <Label Text="Executores AURA"
+               FontAttributes="Bold"
+               FontSize="18"
+               TextColor="{DynamicResource AuraTextPrimary}" />
+
+        <CollectionView x:Name="ExecutorsView" Grid.Row="1">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="local:ExecutorStatus">
+                    <Frame BackgroundColor="{DynamicResource AuraSurface}"
+                           BorderColor="Transparent"
+                           CornerRadius="12"
+                           Padding="12"
+                           Margin="0,4">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Name}"
+                                   FontAttributes="Bold"
+                                   FontSize="15"
+                                   TextColor="{DynamicResource AuraTextPrimary}" />
+                            <Label Text="{Binding Status}"
+                                   FontSize="13"
+                                   TextColor="{Binding StatusColor}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Border Grid.Row="2"
+                BackgroundColor="{DynamicResource AuraSurface}"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 12"
+                Padding="12">
+            <VerticalStackLayout Spacing="8">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <Label Text="Executar"
+                           FontAttributes="Bold"
+                           FontSize="15"
+                           TextColor="{DynamicResource AuraTextPrimary}"
+                           VerticalOptions="Center" />
+                    <Button Grid.Column="1"
+                            x:Name="CopyButton"
+                            Text="Copiar"
+                            Clicked="OnCopyClicked"
+                            BackgroundColor="{DynamicResource AuraSurface2}"
+                            TextColor="{DynamicResource AuraAccent}"
+                            Padding="12,4"
+                            CornerRadius="8"
+                            FontSize="12" />
+                </Grid>
+                <Picker x:Name="ExecutorPicker"
+                        Title="Executor" />
+                <Entry x:Name="CommandEntry"
+                       Placeholder="Comando (ex.: status p/ git, script.py p/ python, ls p/ shell)"
+                       TextColor="{DynamicResource AuraTextPrimary}" />
+                <Entry x:Name="ArgsEntry"
+                       Placeholder="Argumentos (opcional, separados por espaço)"
+                       TextColor="{DynamicResource AuraTextPrimary}" />
+                <Button x:Name="ExecButton"
+                        Text="Executar"
+                        Clicked="OnExecuteClicked"
+                        BackgroundColor="{DynamicResource AuraAccent}"
+                        TextColor="White"
+                        CornerRadius="8" />
+                <Editor x:Name="ResultEditor"
+                        IsReadOnly="True"
+                        HeightRequest="150"
+                        Placeholder="Resultado aparecerá aqui."
+                        BackgroundColor="{DynamicResource AuraBackground}"
+                        TextColor="{DynamicResource AuraTextPrimary}" />
+            </VerticalStackLayout>
+        </Border>
+
+        <Button Grid.Row="3"
+                Text="Atualizar"
+                Clicked="OnRefreshClicked"
+                BackgroundColor="{DynamicResource AuraAccent}"
+                TextColor="White"
+                CornerRadius="8" />
+
+    </Grid>
+</ContentPage>

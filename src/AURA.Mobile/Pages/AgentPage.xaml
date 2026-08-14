@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:AURA.Mobile.Controls"
+             x:Class="AURA.Mobile.Pages.AgentPage"
+             Title="Agente"
+             BackgroundColor="{DynamicResource AuraBackground}">
+
+    <!--
+        Layout: header fixo no topo · conversa ocupa espaço restante ·
+        barra de entrada fixa na base (estilo chat moderno).
+    -->
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- ── Header ─────────────────────────────────────────── -->
+        <Border Grid.Row="0"
+                BackgroundColor="{DynamicResource AuraSurface}"
+                Stroke="{DynamicResource AuraBorder}"
+                StrokeThickness="1"
+                Padding="16,12"
+                StrokeShape="RoundRectangle 0,0,0,0">
+            <VerticalStackLayout Spacing="6">
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Spacing="2">
+                    <HorizontalStackLayout Spacing="6">
+                        <Label Text="◆"
+                               FontSize="14"
+                               TextColor="{DynamicResource AuraAccent}" />
+                        <Label Text="AGENTE"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource AuraAccent}" />
+                    </HorizontalStackLayout>
+                    <Label x:Name="WorkspaceLabel"
+                           FontSize="11"
+                           TextColor="{DynamicResource AuraTextSecondary}"
+                           LineBreakMode="TailTruncation" />
+                    <Label x:Name="ModelLabel"
+                           FontSize="10"
+                           TextColor="{DynamicResource AuraTextMuted}"
+                           LineBreakMode="TailTruncation" />
+                </VerticalStackLayout>
+
+            <Grid Grid.Column="1" ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="6">
+                <Button x:Name="SpeakTestButton"
+                        Text="🔊"
+                        Clicked="OnSpeakTestClicked"
+                        Style="{StaticResource BtnGhost}"
+                        VerticalOptions="Center"
+                        Padding="10,6"
+                        FontSize="12" />
+                <Button Grid.Column="1"
+                        x:Name="ConfigButton"
+                        Text="⚙"
+                        Clicked="OnToggleConfigClicked"
+                        Style="{StaticResource BtnGhost}"
+                        VerticalOptions="Center"
+                        Padding="10,6"
+                        FontSize="12" />
+                <Button Grid.Column="2"
+                        x:Name="ProjectButton"
+                        Text="📁 Vincular"
+                        Clicked="OnLinkProjectClicked"
+                        Style="{StaticResource BtnGhost}"
+                        VerticalOptions="Center"
+                        Padding="10,6"
+                        FontSize="12" />
+            </Grid>
+            </Grid>
+
+            <!-- Configuração IA (provedor/modelo/chave) compartilhada com o Chat -->
+            <Border x:Name="ConfigPanel"
+                    IsVisible="False"
+                    BackgroundColor="{DynamicResource AuraSurface2}"
+                    Stroke="{DynamicResource AuraBorder}"
+                    StrokeThickness="1"
+                    Padding="12,10"
+                    StrokeShape="RoundRectangle 10,10,10,10">
+                <controls:AiConfigView x:Name="AiConfig" />
+            </Border>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- ── Área de conversa ───────────────────────────────── -->
+        <ScrollView x:Name="ConversationScroll" Grid.Row="1">
+            <VerticalStackLayout x:Name="ConversationContainer"
+                                 Spacing="6"
+                                 Padding="14,12" />
+        </ScrollView>
+
+        <!-- ── Barra de entrada ───────────────────────────────── -->
+        <Border Grid.Row="2"
+                BackgroundColor="{DynamicResource AuraSurface}"
+                Stroke="{DynamicResource AuraBorder}"
+                StrokeThickness="1"
+                Padding="12,10"
+                StrokeShape="RoundRectangle 0,0,0,0">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <Border BackgroundColor="{DynamicResource AuraSurface2}"
+                        Stroke="{DynamicResource AuraBorder}"
+                        StrokeThickness="1"
+                        Padding="12,6"
+                        StrokeShape="RoundRectangle 12,12,12,12">
+                    <Editor x:Name="CommandEditor"
+                            MinimumHeightRequest="40"
+                            MaximumHeightRequest="120"
+                            Placeholder="Instrua o agente…"
+                            AutoSize="TextChanges"
+                            BackgroundColor="Transparent" />
+                </Border>
+
+                <Grid Grid.Column="1"
+                      WidthRequest="44"
+                      HeightRequest="44"
+                      VerticalOptions="End">
+                    <Button x:Name="RunButton"
+                            Text="▶"
+                            Clicked="OnRunClicked"
+                            BackgroundColor="{DynamicResource AuraAccent}"
+                            TextColor="White"
+                            CornerRadius="22"
+                            FontSize="16"
+                            Padding="0"
+                            WidthRequest="44"
+                            HeightRequest="44" />
+                    <ActivityIndicator x:Name="BusyIndicator"
+                                       IsRunning="False"
+                                       IsVisible="False"
+                                       Color="White"
+                                       WidthRequest="22"
+                                       HeightRequest="22"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                </Grid>
+            </Grid>
+        </Border>
+
+    </Grid>
+</ContentPage>

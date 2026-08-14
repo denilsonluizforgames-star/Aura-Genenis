@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AURA.Mobile.Pages.HomePage"
+             Title="Início"
+             BackgroundColor="{DynamicResource AuraBackground}">
+
+    <Grid RowDefinitions="*,Auto" Padding="0">
+
+        <!-- ── Conteúdo principal ─────────────────────────── -->
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20,24,20,16" Spacing="20">
+
+                <!-- Header -->
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="A U R A"
+                           FontSize="32"
+                           FontAttributes="Bold"
+                           TextColor="{DynamicResource AuraAccent}" />
+                    <Label x:Name="VersionLabel"
+                           FontSize="12"
+                           TextColor="{DynamicResource AuraTextSecondary}" />
+                </VerticalStackLayout>
+
+                <!-- ── Orb central (conceito holográfico F1 + pulse F2) ── -->
+                <Grid HeightRequest="220" HorizontalOptions="Center" VerticalOptions="Center">
+                    <!-- Anel externo -->
+                    <Border x:Name="OuterRing"
+                            Stroke="{DynamicResource AuraAccent}"
+                            StrokeThickness="1.5"
+                            BackgroundColor="Transparent"
+                            WidthRequest="200" HeightRequest="200"
+                            HorizontalOptions="Center" VerticalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="100" />
+                        </Border.StrokeShape>
+                    </Border>
+                    <!-- Anel médio -->
+                    <Border x:Name="MiddleRing"
+                            Stroke="{DynamicResource AuraCyan}"
+                            StrokeThickness="1"
+                            BackgroundColor="Transparent"
+                            WidthRequest="150" HeightRequest="150"
+                            Opacity="0.7"
+                            HorizontalOptions="Center" VerticalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="75" />
+                        </Border.StrokeShape>
+                    </Border>
+                    <!-- Núcleo -->
+                    <Border x:Name="CoreOrb"
+                            BackgroundColor="{DynamicResource AuraAccentDim}"
+                            WidthRequest="90" HeightRequest="90"
+                            HorizontalOptions="Center" VerticalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="45" />
+                        </Border.StrokeShape>
+                        <Label Text="◈"
+                               FontSize="36"
+                               TextColor="{DynamicResource AuraCyan}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                    </Border>
+                </Grid>
+
+                <Label Text="Núcleo operacional"
+                       FontSize="11"
+                       TextColor="{DynamicResource AuraTextMuted}"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,-12,0,0" />
+
+                <!-- Card Sistema -->
+                <Border Style="{StaticResource AuraCardAccent}">
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="⚙"
+                                   FontSize="16"
+                                   TextColor="{DynamicResource AuraAccent}" />
+                            <Label Text="SISTEMA"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource AuraAccent}" />
+                        </HorizontalStackLayout>
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="{DynamicResource AuraBorder}"
+                                 Margin="0,0,0,2" />
+                        <Label x:Name="OsLabel"   FontSize="13" TextColor="{DynamicResource AuraTextPrimary}" />
+                        <Label x:Name="CpuLabel"  FontSize="13" TextColor="{DynamicResource AuraTextSecondary}" />
+                        <Label x:Name="RamLabel"  FontSize="13" TextColor="{DynamicResource AuraTextSecondary}" />
+                        <Label x:Name="DiskLabel" FontSize="13" TextColor="{DynamicResource AuraTextSecondary}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Card Rede -->
+                <Border Style="{StaticResource AuraCard}">
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="⊕"
+                                   FontSize="16"
+                                   TextColor="{DynamicResource AuraCyan}" />
+                            <Label Text="REDE"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource AuraCyan}" />
+                        </HorizontalStackLayout>
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="{DynamicResource AuraBorder}"
+                                 Margin="0,0,0,2" />
+                        <Label x:Name="NetLabel" FontSize="13" TextColor="{DynamicResource AuraTextPrimary}" />
+                        <Label x:Name="IpLabel"  FontSize="13" TextColor="{DynamicResource AuraTextSecondary}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Card Agentes -->
+                <Border Style="{StaticResource AuraCard}">
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="◆"
+                                   FontSize="16"
+                                   TextColor="{DynamicResource AuraSuccess}" />
+                            <Label Text="AGENTES DISPONÍVEIS"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource AuraSuccess}" />
+                        </HorizontalStackLayout>
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="{DynamicResource AuraBorder}"
+                                 Margin="0,0,0,2" />
+                        <Label x:Name="AgentsLabel"
+                               FontSize="13"
+                               TextColor="{DynamicResource AuraTextSecondary}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Button Text="↻  Atualizar"
+                        Clicked="OnRefreshClicked"
+                        Style="{StaticResource BtnGhost}"
+                        HorizontalOptions="Start" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ── Bottom bar holográfica (conceito vídeo) ── -->
+        <Border Grid.Row="1"
+                BackgroundColor="{DynamicResource AuraSurface}"
+                Stroke="{DynamicResource AuraBorderAccent}"
+                StrokeThickness="1"
+                Padding="8,10"
+                Margin="12,0,12,12">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="18" />
+            </Border.StrokeShape>
+            <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="4">
+
+                <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
+                    <Button x:Name="BtnNetwork"
+                            Text="🌐"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{DynamicResource AuraCyan}"
+                            Padding="0"
+                            HeightRequest="36"
+                            Clicked="OnNetworkClicked" />
+                    <Label Text="Network"
+                           FontSize="9"
+                           TextColor="{DynamicResource AuraCyan}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
+                    <Button x:Name="BtnSensor"
+                            Text="◎"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{DynamicResource AuraTextPrimary}"
+                            Padding="0"
+                            HeightRequest="36"
+                            Clicked="OnSensorClicked" />
+                    <Label Text="Sensor"
+                           FontSize="9"
+                           TextColor="{DynamicResource AuraTextSecondary}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
+                    <Button x:Name="BtnEthereum"
+                            Text="◇"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{DynamicResource AuraTextMuted}"
+                            Padding="0"
+                            HeightRequest="36"
+                            Clicked="OnEthereumClicked" />
+                    <Label Text="Ethereum"
+                           FontSize="9"
+                           TextColor="{DynamicResource AuraTextMuted}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="3" Spacing="2" HorizontalOptions="Center">
+                    <Button x:Name="BtnSystem"
+                            Text="⚙"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{DynamicResource AuraAccent}"
+                            Padding="0"
+                            HeightRequest="36"
+                            Clicked="OnSystemClicked" />
+                    <Label Text="System"
+                           FontSize="9"
+                           TextColor="{DynamicResource AuraAccent}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="4" Spacing="2" HorizontalOptions="Center">
+                    <Button x:Name="BtnDevice"
+                            Text="⬡"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{DynamicResource AuraTextPrimary}"
+                            Padding="0"
+                            HeightRequest="36"
+                            Clicked="OnDeviceClicked" />
+                    <Label Text="Device"
+                           FontSize="9"
+                           TextColor="{DynamicResource AuraTextSecondary}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+            </Grid>
+        </Border>
+
+    </Grid>
+</ContentPage>

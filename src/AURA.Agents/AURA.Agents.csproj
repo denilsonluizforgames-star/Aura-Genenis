@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>AURA.Agents</AssemblyName>
+    <RootNamespace>AURA.Agents</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AURA.Core\AURA.Core.csproj" />
+    <ProjectReference Include="..\AURA.Memory\AURA.Memory.csproj" />
+  </ItemGroup>
+
+</Project>

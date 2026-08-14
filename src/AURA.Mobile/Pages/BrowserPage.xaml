@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AURA.Mobile.Pages.BrowserPage"
+             Title="Navegador"
+             BackgroundColor="{DynamicResource AuraBackground}">
+
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="0">
+
+        <!-- Barra de abas -->
+        <Grid ColumnDefinitions="*,Auto,Auto"
+              ColumnSpacing="0"
+              BackgroundColor="{DynamicResource AuraSurface}">
+            <ScrollView Orientation="Horizontal"
+                        HorizontalScrollBarVisibility="Never"
+                        Grid.Column="0">
+                <HorizontalStackLayout x:Name="TabBar"
+                                       Spacing="6"
+                                       Padding="8,6" />
+            </ScrollView>
+            <Button Grid.Column="1"
+                    x:Name="NewTabButton"
+                    Text="＋"
+                    Clicked="OnNewTabClicked"
+                    BackgroundColor="{DynamicResource AuraAccent}"
+                    TextColor="White"
+                    FontSize="16"
+                    Padding="12,0"
+                    HeightRequest="36"
+                    Margin="0,5,8,5"
+                    CornerRadius="6" />
+            <Label Grid.Column="2"
+                   x:Name="IsolatedLabel"
+                   Text="🛡"
+                   FontSize="14"
+                   VerticalOptions="Center"
+                   IsVisible="False"
+                   TextColor="{DynamicResource AuraAccent}"
+                   Padding="6,0,8,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnIsolatedLabelTapped" />
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
+
+        <!-- Host das abas (só a aba ativa fica visível) -->
+        <Grid Grid.Row="1"
+              x:Name="TabHost" />
+
+        <!-- Busca na página (sobreposta no rodapé da área do conteúdo) -->
+        <Grid Grid.Row="1"
+              x:Name="FindBar"
+              IsVisible="False"
+              VerticalOptions="End"
+              Padding="8,6"
+              ColumnDefinitions="*,Auto,Auto,Auto,Auto"
+              ColumnSpacing="4"
+              BackgroundColor="{DynamicResource AuraSurface}">
+            <Entry x:Name="FindEntry"
+                   Placeholder="Buscar na página"
+                   FontSize="13"
+                   ReturnType="Search"
+                   Completed="OnFindSubmit"
+                   TextColor="{DynamicResource AuraTextPrimary}"
+                   PlaceholderColor="{DynamicResource AuraTextSecondary}" />
+            <Button Grid.Column="1"
+                    x:Name="FindPrevButton"
+                    Text="‹"
+                    Clicked="OnFindPrev"
+                    FontSize="13"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    Padding="10,2"
+                    CornerRadius="6" />
+            <Button Grid.Column="2"
+                    x:Name="FindNextButton"
+                    Text="›"
+                    Clicked="OnFindNext"
+                    FontSize="13"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    Padding="10,2"
+                    CornerRadius="6" />
+            <Button Grid.Column="3"
+                    x:Name="FindCloseButton"
+                    Text="✕"
+                    Clicked="OnFindClose"
+                    FontSize="13"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    Padding="10,2"
+                    CornerRadius="6" />
+            <Label Grid.Column="4"
+                   x:Name="FindResultLabel"
+                   FontSize="11"
+                   VerticalOptions="Center"
+                   TextColor="{DynamicResource AuraTextSecondary}" />
+        </Grid>
+
+        <!-- Navegação + endereço + menu (barra inferior) -->
+        <Grid Grid.Row="2"
+              Padding="8,4"
+              ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto"
+              ColumnSpacing="6"
+              BackgroundColor="{DynamicResource AuraSurface}">
+            <Button x:Name="BackButton"
+                    Text="‹"
+                    Clicked="OnBackClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    Padding="12,2"
+                    CornerRadius="6"
+                    FontSize="18"
+                    IsEnabled="False" />
+            <Button Grid.Column="1"
+                    x:Name="ForwardButton"
+                    Text="›"
+                    Clicked="OnForwardClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    Padding="12,2"
+                    CornerRadius="6"
+                    FontSize="18"
+                    IsEnabled="False" />
+            <Button Grid.Column="2"
+                    x:Name="ReloadButton"
+                    Text="⟳"
+                    Clicked="OnReloadClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraTextPrimary}"
+                    Padding="12,2"
+                    CornerRadius="6"
+                    FontSize="18" />
+            <Entry Grid.Column="3"
+                   x:Name="UrlEntry"
+                   Placeholder="URL ou pesquisa"
+                   Keyboard="Url"
+                   ReturnType="Go"
+                   Completed="OnGoClicked"
+                   TextColor="{DynamicResource AuraTextPrimary}"
+                   PlaceholderColor="{DynamicResource AuraTextSecondary}"
+                   BackgroundColor="{DynamicResource AuraBackground}" />
+            <Button Grid.Column="4"
+                    Text="Ir"
+                    Clicked="OnGoClicked"
+                    BackgroundColor="{DynamicResource AuraAccent}"
+                    TextColor="White"
+                    Padding="14,2"
+                    CornerRadius="6" />
+            <Button Grid.Column="5"
+                    x:Name="MenuButton"
+                    Text="⋯"
+                    Clicked="OnMenuClicked"
+                    BackgroundColor="{DynamicResource AuraSurface}"
+                    TextColor="{DynamicResource AuraAccent}"
+                    Padding="12,2"
+                    CornerRadius="6"
+                    FontSize="16" />
+        </Grid>
+
+    </Grid>
+</ContentPage>

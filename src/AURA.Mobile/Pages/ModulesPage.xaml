@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AURA.Mobile.ViewModels"
+             x:Class="AURA.Mobile.Pages.ModulesPage"
+             Title="Módulos"
+             BackgroundColor="{DynamicResource AuraBackground}">
+
+    <Grid RowDefinitions="Auto,Auto,*" >
+
+        <!-- ── Header ─────────────────────────────────────────── -->
+        <Border Grid.Row="0"
+                BackgroundColor="{DynamicResource AuraSurface}"
+                Stroke="{DynamicResource AuraBorder}"
+                StrokeThickness="1"
+                Padding="16,14"
+                StrokeShape="RoundRectangle 0,0,0,0">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                <VerticalStackLayout Spacing="2">
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="⊞"
+                               FontSize="16"
+                               TextColor="{DynamicResource AuraAccent}" />
+                        <Label Text="MÓDULOS"
+                               FontSize="11"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource AuraAccent}" />
+                    </HorizontalStackLayout>
+                    <Label x:Name="SummaryLabel"
+                           FontSize="11"
+                           TextColor="{DynamicResource AuraTextMuted}" />
+                </VerticalStackLayout>
+
+                <Button Grid.Column="1"
+                        x:Name="DownloadAllButton"
+                        Text="⬇ Baixar"
+                        Clicked="OnDownloadAllClicked"
+                        Style="{StaticResource BtnGhost}"
+                        Padding="10,6"
+                        FontSize="12" />
+                <Button Grid.Column="2"
+                        x:Name="ApplyAllButton"
+                        Text="✓ Aplicar"
+                        Clicked="OnApplyAllClicked"
+                        Style="{StaticResource BtnGhost}"
+                        Padding="10,6"
+                        FontSize="12" />
+            </Grid>
+        </Border>
+
+        <!-- Status de operação em andamento -->
+        <Label x:Name="StatusLabel"
+               Grid.Row="1"
+               FontSize="12"
+               IsVisible="False"
+               Margin="16,6,16,0"
+               TextColor="{DynamicResource AuraWarning}" />
+
+        <!-- ── Lista de módulos ───────────────────────────────── -->
+        <CollectionView x:Name="ModulesView" Grid.Row="2" Margin="0,4">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:ModuleRow">
+                    <Border Margin="14,5"
+                            BackgroundColor="{DynamicResource AuraSurface}"
+                            Stroke="{DynamicResource AuraBorder}"
+                            StrokeThickness="1"
+                            Padding="14,12"
+                            StrokeShape="RoundRectangle 14,14,14,14">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <VerticalStackLayout Spacing="4">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="{Binding Module.Icon}"
+                                           FontSize="16"
+                                           VerticalOptions="Center" />
+                                    <Label Text="{Binding Module.DisplayName}"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
+                                           TextColor="{DynamicResource AuraTextPrimary}" />
+                                    <Border Padding="5,2"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 5,5,5,5"
+                                            BackgroundColor="{DynamicResource AuraAccentDim}"
+                                            VerticalOptions="Center">
+                                        <Label Text="{Binding StateText}"
+                                               FontSize="10"
+                                               FontAttributes="Bold"
+                                               TextColor="{DynamicResource AuraAccent}" />
+                                    </Border>
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding Module.ShortDescription}"
+                                       FontSize="12"
+                                       TextColor="{DynamicResource AuraTextSecondary}"
+                                       LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+
+                            <Button Grid.Column="1"
+                                    Text="{Binding ActionText}"
+                                    IsVisible="{Binding ShowAction}"
+                                    CommandParameter="{Binding .}"
+                                    Clicked="OnActionClicked"
+                                    VerticalOptions="Center"
+                                    Style="{StaticResource BtnPrimary}"
+                                    Padding="12,8"
+                                    FontSize="12" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

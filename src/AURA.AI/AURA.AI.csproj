@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>AURA.AI</AssemblyName>
+    <RootNamespace>AURA.AI</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AURA.Abstractions\AURA.Abstractions.csproj" />
+    <ProjectReference Include="..\AURA.Core\AURA.Core.csproj" />
+    <ProjectReference Include="..\AURA.Memory\AURA.Memory.csproj" />
+  </ItemGroup>
+
+</Project>
