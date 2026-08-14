@@ -1,0 +1,22 @@
+name: AI Code Review with xAI
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+# Permissões para Ler código e Escrever/Editar revisões
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    name: Review
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Review
+        uses: tarmojussila/xai-code-review@v0.1.0
+        with:
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+          # Opcional: Modelo específico
+          # XAI_MODEL: grok-beta
