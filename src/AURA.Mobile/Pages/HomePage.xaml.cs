@@ -1,6 +1,7 @@
 using AURA.Agents;
 using AURA.Network;
 using AURA.SystemInfo;
+using CommunityToolkit.Maui.Views;
 
 namespace AURA.Mobile.Pages;
 
@@ -11,30 +12,123 @@ public partial class HomePage : ContentPage
     private readonly AgentManager _agentManager;
     private bool _pulseRunning;
 
+    private const string VideoBgPrefKey = "aura_video_bg";
+
     public HomePage(SystemAnalyzer systemAnalyzer, NetworkManager networkManager, AgentManager agentManager)
     {
         InitializeComponent();
         _systemAnalyzer = systemAnalyzer;
         _networkManager = networkManager;
         _agentManager = agentManager;
+        App.ThemeChanged += OnThemeChanged;
+        UpdateThemeIcon();
+
+        // Long-press no botão de tema alterna vídeo de fundo on/off (Preference).
+        var longPress = new TapGestureRecognizer
+        {
+            NumberOfTapsRequired = 1
+        };
+        // Usamos GestureRecognizer de long-press via pointer se disponível; fallback = double-tap no botão.
+        var doubleTap = new TapGestureRecognizer { NumberOfTapsRequired = 2 };
+        doubleTap.Tapped += OnThemeDoubleTapped;
+        BtnTheme.GestureRecognizers.Add(doubleTap);
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        UpdateThemeIcon();
         await RefreshAsync();
         StartOrbPulse();
+        ApplyVideoBackground();
     }
 
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
         StopOrbPulse();
+        PauseVideoBackground();
     }
 
     private async void OnRefreshClicked(object? sender, EventArgs e)
     {
         await RefreshAsync();
+    }
+
+    // ── Tema Solar / Lunar ─────────────────────────────────────────
+
+    private void OnThemeToggleClicked(object? sender, EventArgs e)
+    {
+        App.ToggleTheme();
+        // Icon is refreshed via ThemeChanged subscription.
+    }
+
+    private void OnThemeChanged()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            UpdateThemeIcon();
+            ApplyVideoBackground(); // troca source se vídeo estiver ativo
+        });
+    }
+
+    private void UpdateThemeIcon()
+    {
+        if (BtnTheme is null) return;
+        // Solar → mostra lua (próximo estado = Lunar); Lunar → mostra sol
+        BtnTheme.Text = App.IsSolar ? "☾" : "☀";
+    }
+
+    // ── Vídeo de fundo opcional (C1) ───────────────────────────────
+
+    private bool IsVideoBgEnabled => Preferences.Default.Get(VideoBgPrefKey, false);
+
+    private void OnThemeDoubleTapped(object? sender, TappedEventArgs e)
+    {
+        bool next = !IsVideoBgEnabled;
+        Preferences.Default.Set(VideoBgPrefKey, next);
+        AuraLog.Info($"Vídeo de fundo {(next ? "ativado" : "desativado")} (Preference {VideoBgPrefKey})");
+        ApplyVideoBackground();
+        // Feedback visual rápido
+        _ = PlayButtonFeedbackAsync(BtnTheme);
+    }
+
+    private void ApplyVideoBackground()
+    {
+        if (BgVideo is null) return;
+
+        if (!IsVideoBgEnabled)
+        {
+            PauseVideoBackground();
+            BgVideo.IsVisible = false;
+            return;
+        }
+
+        try
+        {
+            // Assets esperados em Resources/Raw/ (MauiAsset LogicalName = filename)
+            string resource = App.IsSolar ? "solar_bg.mp4" : "lunar_bg.mp4";
+            BgVideo.Source = MediaSource.FromResource(resource);
+            BgVideo.IsVisible = true;
+            BgVideo.Play();
+        }
+        catch (Exception ex)
+        {
+            AuraLog.Exception("HomePage.ApplyVideoBackground", ex);
+            BgVideo.IsVisible = false;
+        }
+    }
+
+    private void PauseVideoBackground()
+    {
+        try
+        {
+            BgVideo?.Pause();
+        }
+        catch
+        {
+            // ignore
+        }
     }
 
     // ── Pulse holográfico (F2 — MAUI nativo, zero NuGet) ───────────
@@ -94,53 +188,66 @@ public partial class HomePage : ContentPage
         }
     }
 
-    // ── Bottom bar (conceito holográfico) ──────────────────────────
+    // ── Bottom bar alinhada à referência (Início | Diagnóstico | Módulos | Agentes | Config) ──
 
-    private async void OnNetworkClicked(object? sender, EventArgs e)
+    private async void OnInicioClicked(object? sender, EventArgs e)
     {
-        await PlayButtonFeedbackAsync(BtnNetwork);
-        await RefreshNetworkOnlyAsync();
-        await DisplayAlert("Network", "Status de rede atualizado.", "OK");
-    }
-
-    private async void OnSensorClicked(object? sender, EventArgs e)
-    {
-        await PlayButtonFeedbackAsync(BtnSensor);
-        await RefreshSystemOnlyAsync();
-        await DisplayAlert("Sensor", "Diagnóstico de sistema atualizado.", "OK");
-    }
-
-    private async void OnEthereumClicked(object? sender, EventArgs e)
-    {
-        await PlayButtonFeedbackAsync(BtnEthereum);
-        await DisplayAlert("Ethereum", "Módulo reservado para integração futura.", "OK");
-    }
-
-    private async void OnSystemClicked(object? sender, EventArgs e)
-    {
-        await PlayButtonFeedbackAsync(BtnSystem);
+        await PlayButtonFeedbackAsync(BtnInicio);
         await RefreshAsync();
-        await DisplayAlert("System", "Painel de sistema atualizado.", "OK");
     }
 
-    private async void OnDeviceClicked(object? sender, EventArgs e)
+    private async void OnDiagnosticoClicked(object? sender, EventArgs e)
     {
-        await PlayButtonFeedbackAsync(BtnDevice);
+        await PlayButtonFeedbackAsync(BtnDiagnostico);
+        await NavigateToSectionAndPageAsync("Sistema", "Diagnóstico");
+    }
 
-        // Navega para a seção Apps (Células) se existir no TabbedPage pai.
-        if (Parent is NavigationPage nav && nav.Parent is TabbedPage tabs)
+    private async void OnModulosClicked(object? sender, EventArgs e)
+    {
+        await PlayButtonFeedbackAsync(BtnModulos);
+        await NavigateToSectionAndPageAsync("Ferramentas", "Módulos");
+    }
+
+    private async void OnAgentesClicked(object? sender, EventArgs e)
+    {
+        await PlayButtonFeedbackAsync(BtnAgentes);
+        await NavigateToSectionAndPageAsync("Assistente", "Agente");
+    }
+
+    private async void OnConfigClicked(object? sender, EventArgs e)
+    {
+        await PlayButtonFeedbackAsync(BtnConfig);
+        // Ainda não existe página Config dedicada. Leva à seção Sistema (Início/Diagnóstico/Logs).
+        if (!TrySwitchToSection("Sistema"))
+            await DisplayAlert("Config", "Seção Sistema não disponível no momento.", "OK");
+    }
+
+    /// <summary>
+    /// Troca a aba do TabbedPage para a seção correspondente.
+    /// </summary>
+    private async Task NavigateToSectionAndPageAsync(string sectionTitle, string pageLabel)
+    {
+        if (!TrySwitchToSection(sectionTitle))
         {
-            foreach (var child in tabs.Children)
+            await DisplayAlert(pageLabel, $"Seção \"{sectionTitle}\" ainda não está ativa (módulo não aplicado).", "OK");
+            return;
+        }
+    }
+
+    private bool TrySwitchToSection(string sectionTitle)
+    {
+        if (Parent is not NavigationPage nav || nav.Parent is not TabbedPage tabs)
+            return false;
+
+        foreach (var child in tabs.Children)
+        {
+            if (child is NavigationPage np && string.Equals(np.Title, sectionTitle, StringComparison.OrdinalIgnoreCase))
             {
-                if (child is NavigationPage np && np.Title == "Apps")
-                {
-                    tabs.CurrentPage = child;
-                    return;
-                }
+                tabs.CurrentPage = child;
+                return true;
             }
         }
-
-        await DisplayAlert("Device", "Abra a seção Apps → Células para gerenciar o dispositivo.", "OK");
+        return false;
     }
 
     // ── Refresh ────────────────────────────────────────────────────

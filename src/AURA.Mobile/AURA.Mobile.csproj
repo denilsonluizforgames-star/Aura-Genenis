@@ -24,22 +24,40 @@
     <PublishTrimmed>false</PublishTrimmed>
     <RunAOTCompilation>false</RunAOTCompilation>
     <AndroidPackageFormats>apk</AndroidPackageFormats>
-    <AndroidSupportedAbis>arm64-v8a</AndroidSupportedAbis>
-    <RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
     <!-- minSdk 24 (Android 7.0): exigido pelo OnnxRuntime (ai.onnxruntime) -->
     <SupportedOSPlatformVersion>24</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <!-- Pin 10.0.60+: exigido por CommunityToolkit.Maui.MediaElement 10.0.0 (NU1605 se $(MauiVersion) for 10.0.20). -->
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.60" />
     <!-- ONNX Runtime: TFM net9.0-android (consumido pelo net10.0-android do app).
          Traz a runtime nativa (.so) do Android para inferência CPU local do Kokoro TTS. -->
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.28.0" />
+    <!-- MediaElement para fundo de vídeo opcional (Solar/Lunar). Só toca quando Preference aura_video_bg=true. -->
+    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="10.0.0" />
+  </ItemGroup>
+
+  <!-- Fontes Lovable: Barlow Condensed (headings) + IBM Plex Sans (body) -->
+  <ItemGroup>
+    <MauiFont Include="Resources\Fonts\*" />
   </ItemGroup>
 
   <!-- Modelo Kokoro TTS + voz pf_dora (pt-br) + vocab. Assets empacotados no APK. -->
+  <!-- Vídeos de fundo opcionais (lunar_bg.mp4 / solar_bg.mp4) também em Raw. -->
   <ItemGroup>
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!--
+    Pacotes (manifestos) dos módulos embarcados no APK. O repositório é privado,
+    então raw.githubusercontent.com devolve 404 para o HttpClient anônimo do app;
+    estes assets são o fallback usado pelo ModuleManager quando o download
+    remoto falha, para que "Baixar/Aplicar" funcione offline e sem auth.
+  -->
+  <ItemGroup>
+    <MauiAsset Include="..\..\modules\packages\**\module.json"
+               LogicalName="modulepkgs/%(RecursiveDir)module.json" />
   </ItemGroup>
 
   <!-- Referencia o Core/Abstractions/Agents/Memória/AI/rede/diagnóstico do repo GitHub. -->

@@ -1,26 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="AURA.Mobile.Pages.HomePage"
              Title="Início"
              BackgroundColor="{DynamicResource AuraBackground}">
 
     <Grid RowDefinitions="*,Auto" Padding="0">
 
+        <!-- Fundo de vídeo opcional (atrás de tudo). Só visível/toca quando Preference aura_video_bg=true. -->
+        <toolkit:MediaElement x:Name="BgVideo"
+                              Grid.RowSpan="2"
+                              Aspect="AspectFill"
+                              ShouldAutoPlay="False"
+                              ShouldLoopPlayback="True"
+                              ShouldMute="True"
+                              IsVisible="False"
+                              Volume="0"
+                              HorizontalOptions="Fill"
+                              VerticalOptions="Fill" />
+
         <!-- ── Conteúdo principal ─────────────────────────── -->
         <ScrollView Grid.Row="0">
             <VerticalStackLayout Padding="20,24,20,16" Spacing="20">
 
-                <!-- Header -->
-                <VerticalStackLayout Spacing="2">
-                    <Label Text="A U R A"
-                           FontSize="32"
-                           FontAttributes="Bold"
-                           TextColor="{DynamicResource AuraAccent}" />
-                    <Label x:Name="VersionLabel"
-                           FontSize="12"
-                           TextColor="{DynamicResource AuraTextSecondary}" />
-                </VerticalStackLayout>
+                <!-- Header + toggle Solar/Lunar (+ long-press = vídeo on/off) -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="A U R A"
+                               FontSize="32"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource AuraAccent}" />
+                        <Label x:Name="VersionLabel"
+                               FontSize="12"
+                               TextColor="{DynamicResource AuraTextSecondary}" />
+                    </VerticalStackLayout>
+                    <Button x:Name="BtnTheme"
+                            Grid.Column="1"
+                            Text="☾"
+                            FontSize="20"
+                            BackgroundColor="Transparent"
+                            TextColor="{DynamicResource AuraAccent}"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            Padding="0"
+                            VerticalOptions="Center"
+                            Clicked="OnThemeToggleClicked" />
+                </Grid>
 
                 <!-- ── Orb central (conceito holográfico F1 + pulse F2) ── -->
                 <Grid HeightRequest="220" HorizontalOptions="Center" VerticalOptions="Center">
@@ -141,88 +167,82 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- ── Bottom bar holográfica (conceito vídeo) ── -->
+        <!-- ── Bottom bar glass (estilo AuraGlassBar) ── -->
         <Border Grid.Row="1"
-                BackgroundColor="{DynamicResource AuraSurface}"
-                Stroke="{DynamicResource AuraBorderAccent}"
-                StrokeThickness="1"
-                Padding="8,10"
+                Style="{StaticResource AuraGlassBar}"
                 Margin="12,0,12,12">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="18" />
-            </Border.StrokeShape>
             <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="4">
 
                 <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
-                    <Button x:Name="BtnNetwork"
-                            Text="🌐"
+                    <Button x:Name="BtnInicio"
+                            Text="⌂"
                             FontSize="18"
                             BackgroundColor="Transparent"
                             TextColor="{DynamicResource AuraCyan}"
                             Padding="0"
                             HeightRequest="36"
-                            Clicked="OnNetworkClicked" />
-                    <Label Text="Network"
+                            Clicked="OnInicioClicked" />
+                    <Label Text="Início"
                            FontSize="9"
                            TextColor="{DynamicResource AuraCyan}"
                            HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
-                    <Button x:Name="BtnSensor"
+                    <Button x:Name="BtnDiagnostico"
                             Text="◎"
                             FontSize="18"
                             BackgroundColor="Transparent"
                             TextColor="{DynamicResource AuraTextPrimary}"
                             Padding="0"
                             HeightRequest="36"
-                            Clicked="OnSensorClicked" />
-                    <Label Text="Sensor"
+                            Clicked="OnDiagnosticoClicked" />
+                    <Label Text="Diagnóstico"
                            FontSize="9"
                            TextColor="{DynamicResource AuraTextSecondary}"
                            HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
-                    <Button x:Name="BtnEthereum"
-                            Text="◇"
-                            FontSize="18"
-                            BackgroundColor="Transparent"
-                            TextColor="{DynamicResource AuraTextMuted}"
-                            Padding="0"
-                            HeightRequest="36"
-                            Clicked="OnEthereumClicked" />
-                    <Label Text="Ethereum"
-                           FontSize="9"
-                           TextColor="{DynamicResource AuraTextMuted}"
-                           HorizontalTextAlignment="Center" />
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Grid.Column="3" Spacing="2" HorizontalOptions="Center">
-                    <Button x:Name="BtnSystem"
-                            Text="⚙"
-                            FontSize="18"
-                            BackgroundColor="Transparent"
-                            TextColor="{DynamicResource AuraAccent}"
-                            Padding="0"
-                            HeightRequest="36"
-                            Clicked="OnSystemClicked" />
-                    <Label Text="System"
-                           FontSize="9"
-                           TextColor="{DynamicResource AuraAccent}"
-                           HorizontalTextAlignment="Center" />
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Grid.Column="4" Spacing="2" HorizontalOptions="Center">
-                    <Button x:Name="BtnDevice"
-                            Text="⬡"
+                    <Button x:Name="BtnModulos"
+                            Text="⊞"
                             FontSize="18"
                             BackgroundColor="Transparent"
                             TextColor="{DynamicResource AuraTextPrimary}"
                             Padding="0"
                             HeightRequest="36"
-                            Clicked="OnDeviceClicked" />
-                    <Label Text="Device"
+                            Clicked="OnModulosClicked" />
+                    <Label Text="Módulos"
+                           FontSize="9"
+                           TextColor="{DynamicResource AuraTextSecondary}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="3" Spacing="2" HorizontalOptions="Center">
+                    <Button x:Name="BtnAgentes"
+                            Text="◆"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{DynamicResource AuraTextPrimary}"
+                            Padding="0"
+                            HeightRequest="36"
+                            Clicked="OnAgentesClicked" />
+                    <Label Text="Agentes"
+                           FontSize="9"
+                           TextColor="{DynamicResource AuraTextSecondary}"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="4" Spacing="2" HorizontalOptions="Center">
+                    <Button x:Name="BtnConfig"
+                            Text="⚙"
+                            FontSize="18"
+                            BackgroundColor="Transparent"
+                            TextColor="{DynamicResource AuraTextPrimary}"
+                            Padding="0"
+                            HeightRequest="36"
+                            Clicked="OnConfigClicked" />
+                    <Label Text="Config"
                            FontSize="9"
                            TextColor="{DynamicResource AuraTextSecondary}"
                            HorizontalTextAlignment="Center" />
